@@ -1,0 +1,130 @@
+﻿@model IEnumerable<UserManagementApp.Models.UserModel>
+
+@{
+    ViewBag.Title = "List of users";
+}
+<div class="UsersAvailable">
+    <h2>Available users</h2>
+    <p>
+        @Html.ActionLink("Create New user", "Create")
+    </p>
+
+    <form asp-action="Index" method="get">
+        <div class="form-actions no-color">
+            <p>
+                Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+                <input type="submit" value="Search" class="btn btn-default" /> |
+                <a href="@Url.Action("Index")">Back to Full List</a>
+            </p>
+        </div>
+    </form>
+
+    <table class="table">
+        <tr>
+            <th>
+                <a href="@Url.Action("Index", new { sortParameter = "Firstname", sortOrder = ViewData["SortOrder"].ToString() == "asc" && ViewData["SortParameter"].ToString().ToLower() == "firstname" ? "desc" : "asc", searchString = ViewData["CurrentFilter"]})">@Html.DisplayNameFor(model => model.FirstName)</a>
+            </th>
+            <th>
+                <a href="@Url.Action("Index", new { sortParameter = "Lastname", sortOrder = ViewData["SortOrder"].ToString() == "asc" && ViewData["SortParameter"].ToString().ToLower() == "lastname" ? "desc" : "asc", searchString = ViewData["CurrentFilter"] })">@Html.DisplayNameFor(model => model.LastName)</a>
+            </th>
+            <th>
+                <a href="@Url.Action("Index", new { sortParameter = "Username", sortOrder = ViewData["SortOrder"].ToString() == "asc" && ViewData["SortParameter"].ToString().ToLower() == "username" ? "desc" : "asc", searchString = ViewData["CurrentFilter"] })">@Html.DisplayNameFor(model => model.Username)</a>
+            </th>
+            <th>
+                <a href="@Url.Action("Index", new { sortParameter = "Password", sortOrder = ViewData["SortOrder"].ToString() == "asc" && ViewData["SortParameter"].ToString().ToLower() == "password" ? "desc" : "asc", searchString = ViewData["CurrentFilter"] })">@Html.DisplayNameFor(model => model.Password)</a>
+            </th>
+            <th>
+                <a href="@Url.Action("Index", new { sortParameter = "Email", sortOrder = ViewData["SortOrder"].ToString() == "asc" && ViewData["SortParameter"].ToString().ToLower() == "email" ? "desc" : "asc", searchString = ViewData["CurrentFilter"] })">@Html.DisplayNameFor(model => model.Email)</a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10">
+                            <a href="@Url.Action("Edit", new { id = item.ID })" class="btn btn-default"> Edit </a>
+                            <a href="@Url.Action("Index", "Permissions", new { id = item.ID }, null)" class="btn btn-default"> Assign </a>
+                            <a href="@Url.Action("Delete", new { id = item.ID })" class="btn btn-default"> Delete </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        }
+
+    </table>
+
+
+    @if (ViewBag.Page > 0)
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.Page - 1, searchString = ViewData["CurrentFilter"], sortOrder = ViewData["SortOrder"], sortParameter = ViewData["SortParameter"] })"
+           class="btn btn-default">
+            &laquo; Prev
+        </a>
+    }
+    @if (ViewBag.Page < ViewBag.MaxPage)
+    {
+        <a href="@Url.Action("Index", new { page = ViewBag.Page + 1 , searchString = ViewData["CurrentFilter"], sortOrder = ViewData["SortOrder"], sortParameter = ViewData["SortParameter"] })"
+           class="btn btn-default">
+            Next &raquo;
+        </a>
+    }
+
+</div>
+
+@*<div class="ShowPopUp">
+    @Html.Label("Show pop up")
+</div>*@
+
+<div class="modal fade" id="MyPopUp" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to delete this user?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="modalYesBtn">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".ShowPopUp").click(function (e) {
+                $('#MyPopUp').modal('show');
+                $("#MyPopUp").on("click", "#modalYesBtn", function () {
+                    alert("hello world!");
+                });
+            });
+        })
+    </script>
+}
+
